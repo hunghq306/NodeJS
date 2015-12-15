@@ -34,7 +34,7 @@ client.create({
 */
 
  client.search({
-	q: 'title',
+	q: 'title'
 }).then(function (body) {
 	console.log("====2222");
     console.log(body.hits.hits);
