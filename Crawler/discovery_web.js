@@ -59,20 +59,6 @@ app.get('/crawler', function(req, res) {
         }
     });
 
-    parameters = {};   //define parameters
-    first(parameters); // call first function to kick things off.
-    var first = function(parameters) {
-        request(parameters,function(error, response, data){
-            newParamters = date.something;
-            second(newParamters, data); //call second function
-        });
-    };
-
-    var second = function(newParamters, data){
-        request(newParamters,function(error, response, data){
-            res.redirect(data.info.url);
-        });
-    }
 
 
 });
