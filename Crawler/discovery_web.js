@@ -42,24 +42,28 @@ app.get('/crawler', function(req, res) {
             var fileUrlArr = fileUrl.split("/");
             var fileName = fileUrlArr[fileUrlArr.length - 1];
             console.log("===== pdf file : " + fileName + "::" + fileUrl + "::" + fileReferrerUrl);
-            var friendlyName = "";
-            var subCrawler = simpleCrawler.crawl(fileReferrerUrl);
-            subCrawler.maxDepth = 1;
-            subCrawler.on("fetchcomplete", function(queueItem, responseBuffer, response) {
-                var html = responseBuffer.toString();
-                console.log("==html:" + html);
-                var $ = cheerio.load(html);
-                console.log("==fileName:" + fileName);
-                var aElement = $('a[href$="'+fileName+'"]'); // :first
-                if (aElement) {
-                    friendlyName = aElement.html();
-                    console.log("==friendlyName :" + friendlyName);
-                }
-            });
+            fileInfo(fileName,fileUrl, fileReferrerUrl, saveCallBack);
         }
     });
 
+    function saveCallBack(friendlyName,fileUrl, fileReferrerUrl) {
+        console.log("==saveCallBack :" + friendlyName + "::" + fileUrl + "::" + fileReferrerUrl);
 
+    }
+
+    var fileInfo = function(fileName, fileUrl, fileReferrerUrl, callback) {
+        var myCrawler = simpleCrawler.crawl(fileReferrerUrl);
+        myCrawler.maxDepth = 1;
+        myCrawler.on("fetchcomplete", function(queueItem, responseBuffer, response) {
+            var html = responseBuffer.toString();
+            var $ = cheerio.load(html);
+            var aElement = $('a[href$="'+fileName+'"]'); // risk
+            if (aElement) {
+                var friendlyName = aElement.html();
+                callback(friendlyName, fileUrl, fileReferrerUrl);
+            }
+        });
+    }
 
 });
 
