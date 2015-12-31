@@ -1,3 +1,2 @@
-console.log('Node is installed!');
+console.log('Node is installed! :' + new Date().getTime());
 
-var google = require('googleapis');
