@@ -6,6 +6,45 @@ Promise.promisify and Promise.promisifyAll
 - use techniques of dynamic recompilation to introduce very little overhead.
 
 */
+/**
+ *
+ * @param file
+ * @returns {bluebird}
+ */
+this.getFile = function(file) {
+  var downloadUrl = file.downloadUrl;
+  console.log('=== Salesforce begin getFile : ', downloadUrl);
+
+  // token = '00D3B000000DToc!ARIAQMiZD.nEp0BRyZjPqTPhnXUIZ2kH4imFHH0_w1_JnJOAMSeXJOYvNnbkbsBH6UDA3vnaWRcgJh.aXZs60RA8wwq_CFYZ';
+  // console.log('=== Salesforce getFile token: ', token);
+
+  var requestObj = {
+    url: downloadUrl,
+    headers: {
+      'User-Agent': 'request',
+      Authorization: 'Bearer ' + token,
+    },
+  };
+  return new Promise(function(resolve, reject) {
+    if (!downloadUrl) {
+      console.log('=== downloadUrl null :', file);
+      reject('downloadUrl null');
+    }
+    var requestGet = Promise.promisifyAll(require('request'));
+    requestGet.getAsync(requestObj).then(function(res) {
+      if (!res || !res.headers['content-type']) {
+        console.log('=== no content-type in response header');
+        reject();
+      } else if (res.headers['content-type'].indexOf('html') >= 0) {
+        console.log('=== request for file returned html from server');
+        reject();
+      }
+      console.log('=== salesforce mimetype :', res.headers['content-type']); // application/octetstream
+      var myRequest = require('request')(requestObj);
+      resolve(myRequest);
+    });
+  });
+};
 
 /*
 getPromise1()
@@ -137,3 +176,4 @@ function getPromise(param){
       return result + ' resolved'
     });
 }
+

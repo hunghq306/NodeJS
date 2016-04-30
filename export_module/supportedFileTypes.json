@@ -1,0 +1,11 @@
+{
+  "text/html": {
+    "format": "HTML"
+  },
+  "application/pdf": {
+    "format": "PDF"
+  },
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
+    "format": "DOCX"
+  }
+}
